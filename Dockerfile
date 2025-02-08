@@ -6,25 +6,27 @@ ENV DOCKER=true
 ENV GIT_PYTHON_REFRESH=quiet
 ENV PIP_NO_CACHE_DIR=1
 
-# Instalar dependências básicas
-RUN apt update && apt install libcairo2 git -y --no-install-recommends
+# Instalação de dependências
+RUN apt update && apt install -y libcairo2 git --no-install-recommends
+RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/*
 
-# Limpar arquivos temporários para reduzir o tamanho da imagem
-RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
-
-# Clonar o repositório
+# Clonando o repositório
 RUN git clone https://github.com/coddrago/Heroku /Hikka
 WORKDIR /Hikka
 
-# Instalar dependências do Python
+# Instalando dependências do Python
 RUN pip install --no-warn-script-location --no-cache-dir -r requirements.txt
 RUN pip install --no-warn-script-location --no-cache-dir redis
 
-# Expor a porta 8080
+# Expondo a porta
 EXPOSE 8080
 
-# Criar o diretório de dados
+# Criando diretório de dados
 RUN mkdir /data
 
-# Rodar o bot
-CMD ["python3", "-m", "hikka"]
+# Script de inicialização
+COPY init.sh /init.sh
+RUN chmod +x /init.sh
+
+# Comando de inicialização
+CMD ["/init.sh"]
