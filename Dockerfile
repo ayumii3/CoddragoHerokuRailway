@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster as main
+FROM python:3.10-slim-bullseye as main
 ENV RAILWAY=true
 ENV DOCKER=true
 ENV GIT_PYTHON_REFRESH=quiet
